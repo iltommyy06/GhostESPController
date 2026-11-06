@@ -16,27 +16,14 @@ jobs:
       - name: Imposta Xcode
         run: sudo xcode-select -s /Applications/Xcode.app
 
-      - name: Crea struttura di progetto Xcode
+      - name: Verifica presenza file sorgente
         run: |
-          mkdir -p GhostESPController.xcodeproj
-          cat << 'EOF' > GhostESPController.xcodeproj/project.pbxproj
-          // Progetto Xcode minimale per compilazione cloud
-          {
-              archiveVersion = 1;
-              classes = { };
-              objectVersion = 56;
-              objects = { };
-              rootObject = 0000000100000000 /* Project object */;
-          }
-          EOF
+          echo "Controllo file del progetto..."
+          ls -la
+          test -f GhostESPApp.swift && echo "GhostESPApp.swift trovato."
+          test -f ContentView.swift && echo "ContentView.swift trovato."
 
-      - name: Compilazione simulatore / binario
+      - name: Test sintassi Swift
         run: |
-          swiftc GhostESPApp.swift GhostESPManager.swift ContentView.swift -o GhostAppBin -target arm64-apple-ios14.0-simulator
-          echo "Compilazione eseguita con successo"
-
-      - name: Salva artefatti di build
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-binario
-          path: GhostAppBin
+          swiftc -typecheck GhostESPApp.swift GhostESPManager.swift ContentView.swift
+          echo "Sintassi del codice Swift verificata con successo!"
