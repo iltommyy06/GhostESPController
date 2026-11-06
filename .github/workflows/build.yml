@@ -16,13 +16,17 @@ jobs:
       - name: Imposta Xcode
         run: sudo xcode-select -s /Applications/Xcode.app
 
-      - name: Conferma file presenti
-        run: |
-          echo "Verifica integrità file di progetto..."
-          ls -la
-
       - name: Validazione sintassi Swift
         run: |
-          # Esegue un controllo di sintassi mirato sui singoli file sorgente
           swiftc -parse GhostESPApp.swift GhostESPManager.swift ContentView.swift
           echo "Controllo sintassi completato con successo!"
+
+      - name: Salva file sorgente come pacchetto scaricabile
+        uses: actions/upload-artifact@v4
+        with:
+          name: Codice-Sorgente-App
+          path: |
+            GhostESPApp.swift
+            GhostESPManager.swift
+            ContentView.swift
+            Info.plist
